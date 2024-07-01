@@ -6,6 +6,7 @@ import { exec } from 'child_process';
 import OpenAI from 'openai';
 import multer from 'multer';
 import fs from 'fs/promises';
+import path from 'path';
 
 interface MulterRequest extends Request {
 	file?: Express.Multer.File;
@@ -26,14 +27,31 @@ const upload = multer({ dest: 'uploads/' });
 
 const runPythonScript = (filePath: string): Promise<string> => {
 	return new Promise((resolve, reject) => {
-		exec(`python ../scripts/voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
+		exec(`python ../scripts/voice_analyze/voice_analyze.py ${filePath}`, async (error, stdout, stderr) => {
 			if (error) {
-				return reject(new Error(`Error executing script: ${error.message}`));
+				return reject(new Error(`Error when script running: ${error.message}`));
 			}
 			if (stderr) {
-				return reject(new Error(`Script stderr: ${stderr}`));
+				return reject(new Error(`Standart script output: ${stderr}`));
 			}
-			resolve(stdout.trim());
+
+			const resultsDir = path.join(__dirname, '../results');
+			try {
+				const files = await fs.readdir(resultsDir);
+
+				const resultFile = files.find(file => file.endsWith('.png'));
+				if (!resultFile) {
+					return reject(new Error('Файл результата не найден в директории results'));
+				}
+				const resultFilePath = path.join(resultsDir, resultFile);
+				resolve(resultFilePath);
+			} catch (readError) {
+				if (readError instanceof Error) {
+					return reject(new Error(`Error when read results directory: ${readError.message}`));
+				} else {
+					return reject(new Error(`Unknown error when read results directory: ${String(readError)}`));
+				}
+			}
 		});
 	});
 };
