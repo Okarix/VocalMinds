@@ -1,74 +1,99 @@
 import 'dotenv/config';
-import express from 'express';
+import express, { Request, Response } from 'express';
 import globalRouter from './global-router';
 import { logger } from './logger';
+import { exec } from 'child_process';
 import OpenAI from 'openai';
+import multer from 'multer';
+import fs from 'fs/promises';
+
+interface MulterRequest extends Request {
+	file?: Express.Multer.File;
+}
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(logger);
 app.use(express.json());
-app.use('/api/v1/', globalRouter);
+app.use('/', globalRouter);
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+	apiKey: process.env.OPENAI_API_KEY,
 });
 
-const systemPrompt = `
-You are professional teacher who suggests his students different LLM courses. 
-You should provide a 4 books to read in order to become well-trained LLM engineer.
-A book should contain a brief description of the course, book name and author name. 
-Please, return your response in following array JSON format: 
-{
-  books: [
-    {
-      "author": "Author Name",
-      "name": "Book Name",
-      "description": "Description of the course"
-    }
-  ]
-}
-If user prompt is irrelevant return empty array of books
-`;
-const userPrompt =
-  'I am a software engineer who has a keen interest in LLM course. What should I start with?';
+const upload = multer({ dest: 'uploads/' });
 
-const main = async () => {
-  try {
-    const response = await openai.chat.completions.create({
-      model: 'gpt-4o',
-      messages: [
-        {
-          role: 'system',
-          content: systemPrompt,
-        },
-        {
-          role: 'user',
-          content: userPrompt,
-        },
-      ],
-      response_format: {
-        type: 'json_object',
-      },
-    });
-
-    const resJson: string | null = response.choices[0].message.content;
-    if (resJson) {
-      try {
-        const parsedRes = JSON.parse(resJson);
-        console.log(parsedRes.books);
-      } catch (e: any) {
-        console.log('JSON parsing failed:', e.message);
-      }
-    }
-  } catch (e: any) {
-    console.log(e.message);
-  }
+const runPythonScript = (filePath: string): Promise<string> => {
+	return new Promise((resolve, reject) => {
+		exec(`python ../scripts/voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
+			if (error) {
+				return reject(new Error(`Error executing script: ${error.message}`));
+			}
+			if (stderr) {
+				return reject(new Error(`Script stderr: ${stderr}`));
+			}
+			resolve(stdout.trim());
+		});
+	});
 };
 
-// main();
+const analyzeWithOpenAI = async (graphData: string): Promise<string> => {
+	const systemPrompt = 'Analyze this vocal analysis graph and provide feedback.';
+	const userPrompt = graphData;
+
+	try {
+		const response = await openai.chat.completions.create({
+			model: 'gpt-4o',
+			messages: [
+				{
+					role: 'system',
+					content: systemPrompt,
+				},
+				{
+					role: 'user',
+					content: userPrompt,
+				},
+			],
+		});
+
+		const res: string | null = response.choices[0].message.content;
+		if (res) {
+			return res.trim();
+		} else {
+			throw new Error('No response from OpenAI');
+		}
+	} catch (e: any) {
+		console.log(e.message);
+		throw e;
+	}
+};
+
+app.post('/analyze', upload.single('audio'), async (req: MulterRequest, res: Response): Promise<void> => {
+	const filePath = req.file?.path;
+
+	if (!filePath) {
+		res.status(400).send('No file uploaded');
+		return;
+	}
+
+	try {
+		const outputPath = await runPythonScript(filePath);
+		console.log(`Script output: ${outputPath}`);
+
+		const data = await fs.readFile(outputPath, 'base64');
+		const feedback = await analyzeWithOpenAI(data);
+
+		res.json({
+			graph: outputPath,
+			feedback,
+		});
+	} catch (error) {
+		console.error(`Error: ${(error as Error).message}`);
+		res.status(500).send('Server error');
+	}
+});
 
 app.listen(PORT, () => {
-  console.log(`Server runs at http://localhost:${PORT}`);
+	console.log(`Server runs at http://localhost:${PORT}`);
 });
