@@ -5,8 +5,14 @@ import { logger } from './logger';
 import { exec } from 'child_process';
 import OpenAI from 'openai';
 import multer from 'multer';
+import { createClient } from '@supabase/supabase-js';
 import fs from 'fs/promises';
 import path from 'path';
+
+// Настройки Supabase
+const supabaseUrl = process.env.SUPABASE_URL || 'https://lvawmpxeromwfgmyonil.supabase.co';
+const supabaseKey = process.env.SUPABASE_KEY || 'your_supabase_key';
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 interface MulterRequest extends Request {
 	file?: Express.Multer.File;
@@ -25,44 +31,30 @@ const openai = new OpenAI({
 
 const upload = multer({ dest: 'uploads/' });
 
-const runPythonScript = (filePath: string): Promise<string> => {
+const runPythonScript = (filePath: string): Promise<{ outputPath: string; analysisText: string }> => {
 	return new Promise((resolve, reject) => {
-		exec(`python ../scripts/voice_analyze/voice_analyze.py ${filePath}`, async (error, stdout, stderr) => {
+		exec(`python ../scripts/voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
 			if (error) {
 				return reject(new Error(`Error when script running: ${error.message}`));
 			}
 			if (stderr) {
-				return reject(new Error(`Standart script output: ${stderr}`));
+				return reject(new Error(`Standard script output: ${stderr}`));
 			}
-
-			const resultsDir = path.join(__dirname, '../results');
-			try {
-				const files = await fs.readdir(resultsDir);
-
-				const resultFile = files.find(file => file.endsWith('.png'));
-				if (!resultFile) {
-					return reject(new Error('Файл результата не найден в директории results'));
-				}
-				const resultFilePath = path.join(resultsDir, resultFile);
-				resolve(resultFilePath);
-			} catch (readError) {
-				if (readError instanceof Error) {
-					return reject(new Error(`Error when read results directory: ${readError.message}`));
-				} else {
-					return reject(new Error(`Unknown error when read results directory: ${String(readError)}`));
-				}
-			}
+			const output = stdout.split('\n');
+			const outputPath = output[0].trim();
+			const analysisText = output.slice(1).join('\n').trim();
+			resolve({ outputPath, analysisText });
 		});
 	});
 };
 
-const analyzeWithOpenAI = async (graphData: string): Promise<string> => {
-	const systemPrompt = 'Analyze this vocal analysis graph and provide feedback.';
-	const userPrompt = graphData;
+const analyzeWithOpenAI = async (analysisText: string): Promise<string> => {
+	const systemPrompt = 'Analyze the following vocal analysis data and provide feedback:';
+	const userPrompt = analysisText;
 
 	try {
 		const response = await openai.chat.completions.create({
-			model: 'gpt-4o',
+			model: 'gpt-4',
 			messages: [
 				{
 					role: 'system',
@@ -96,14 +88,12 @@ app.post('/analyze', upload.single('audio'), async (req: MulterRequest, res: Res
 	}
 
 	try {
-		const outputPath = await runPythonScript(filePath);
-		console.log(`Script output: ${outputPath}`);
+		const { outputPath, analysisText } = await runPythonScript(filePath);
+		console.log(`Script output: ${analysisText}`);
 
-		const data = await fs.readFile(outputPath, 'base64');
-		const feedback = await analyzeWithOpenAI(data);
+		const feedback = await analyzeWithOpenAI(analysisText);
 
 		res.json({
-			graph: outputPath,
 			feedback,
 		});
 	} catch (error) {
