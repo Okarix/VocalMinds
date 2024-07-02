@@ -11,44 +11,37 @@ def load_audio(file_path):
     return y, sr
 
 def analyze_pitch_with_librosa(y, sr):
-    # Extracting pitches using librosa's pitch tracking
     pitches, magnitudes = librosa.core.piptrack(y=y, sr=sr)
     pitch = [pitches[magnitudes[:, i].argmax(), i] for i in range(magnitudes.shape[1])]
     return pitch
 
 def analyze_timbre(y, sr):
-    # Spectral centroid as a simple timbre feature
     spectral_centroid = librosa.feature.spectral_centroid(y=y, sr=sr)
     return spectral_centroid
 
 def analyze_dynamics(y):
-    # Root mean square (RMS) energy
     rms = librosa.feature.rms(y=y)
     return rms
 
 def analyze_articulation(file_path):
-    # Using Praat via parselmouth for intensity analysis
     snd = parselmouth.Sound(file_path)
     intensity = call(snd, "To Intensity", 75, 0.0, "yes")
     intensity_values = intensity.values.T
     return intensity_values
 
 def analyze_rhythm(y, sr):
-    # Beat tracking using librosa
     tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
     return tempo, beats
 
 def analyze_breath_control(y, sr):
-    # Using RMS energy to analyze breath control
     rms = librosa.feature.rms(y=y)
     return rms
 
 def analyze_vibrato(y, sr):
-    # Vibrato analysis using librosa's pitch tracking
     pitches, magnitudes = librosa.core.piptrack(y=y, sr=sr)
     pitch = [pitches[magnitudes[:, i].argmax(), i] for i in range(magnitudes.shape[1])]
     pitch = np.array(pitch)
-    pitch = pitch[pitch > 0]  # Filter out non-positive pitches
+    pitch = pitch[pitch > 0]
     return pitch
 
 def plot_analysis_results(results, output_path):
@@ -90,22 +83,35 @@ def main(file_path):
         "Vibrato (Pitch)": vibrato
     }
 
-    # Create results directory if it doesn't exist
     if not os.path.exists('results'):
         os.makedirs('results')
 
-    # Determine the next available result file number
     result_files = os.listdir('results')
     next_index = len(result_files) + 1
     output_path = f"results/analysis_results_{next_index}.png"
 
     plot_analysis_results(results, output_path)
 
-    return output_path
+    # Extract the first value from rhythm_tempo for formatting
+    rhythm_tempo_value = rhythm_tempo if np.isscalar(rhythm_tempo) else rhythm_tempo[0]
+
+    analysis_text = (
+        f"Pitch Analysis: {np.mean(pitch_librosa):.2f} Hz\n"
+        f"Timbre Analysis (Spectral Centroid): {np.mean(timbre):.2f}\n"
+        f"Dynamics Analysis (RMS): {np.mean(dynamics):.2f}\n"
+        f"Articulation Analysis (Intensity): {np.mean(articulation):.2f}\n"
+        f"Rhythm Analysis (Tempo): {rhythm_tempo_value:.2f} BPM\n"
+        f"Breath Control (RMS): {np.mean(breath_control):.2f}\n"
+        f"Vibrato Analysis (Pitch): {np.mean(vibrato):.2f} Hz"
+    )
+
+    return output_path, analysis_text
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python analyze_audio.py <file_path>")
     else:
         file_path = sys.argv[1]
-        main(file_path)
+        output_path, analysis_text = main(file_path)
+        print(output_path)
+        print(analysis_text)
