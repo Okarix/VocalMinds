@@ -7,7 +7,7 @@ const openai = new OpenAI({
 
 export async function runPythonScript(filePath: string): Promise<{ outputPath: string; analysisText: string }> {
 	return new Promise((resolve, reject) => {
-		exec(`python ../scripts/voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
+		exec(`python ./voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
 			if (error) {
 				return reject(new Error(`Error when script running: ${error.message}`));
 			}
