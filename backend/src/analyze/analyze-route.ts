@@ -16,7 +16,7 @@ analyzeRoute.post('/', upload.single('audio'), async (req: Request, res: Respons
 		const { outputPath, analysisText } = await runPythonScript(filePath);
 		const feedback = await analyzeWithOpenAI(analysisText);
 
-		res.json({ feedback });
+		res.json(feedback);
 	} catch (error) {
 		console.error(`Error: ${(error as Error).message}`);
 		res.status(500).send('Server error');
