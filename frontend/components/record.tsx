@@ -6,9 +6,13 @@ import { Button } from '@/components/ui/button';
 
 export function RecordPage() {
 	const [file, setFile] = useState(null);
+	const [isUploading, setIsUploading] = useState(false);
+	const [fileName, setFileName] = useState('');
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
-		setFile(event.target.files[0]);
+		const selectedFile = event.target.files[0];
+		setFile(selectedFile);
+		setFileName(selectedFile ? selectedFile.name : '');
 	};
 
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -19,6 +23,7 @@ export function RecordPage() {
 			return;
 		}
 
+		setIsUploading(true);
 		const formData = new FormData();
 		formData.append('audio', file);
 
@@ -32,6 +37,8 @@ export function RecordPage() {
 		} catch (error) {
 			console.error('Error uploading file:', error);
 			alert('There was an error uploading the file. Please try again.');
+		} finally {
+			setIsUploading(false);
 		}
 	};
 
@@ -58,14 +65,16 @@ export function RecordPage() {
 								accept='audio/*'
 								onChange={handleFileChange}
 							/>
+							{fileName && <p className='mt-2 text-green-600'>File selected: {fileName}</p>}
 						</CardContent>
 					</Card>
 				</div>
 				<Button
 					type='submit'
 					className='w-full bg-[#247BA0] hover:bg-[#7594a2]'
+					disabled={isUploading}
 				>
-					Send Audio
+					{isUploading ? 'Loading...' : 'Send Audio'}
 				</Button>
 			</form>
 		</div>
