@@ -7,11 +7,11 @@ import { Button } from '@/components/ui/button';
 export function RecordPage() {
 	const [file, setFile] = useState(null);
 
-	const handleFileChange = event => {
+	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
 		setFile(event.target.files[0]);
 	};
 
-	const handleSubmit = async event => {
+	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
 		if (!file) {
