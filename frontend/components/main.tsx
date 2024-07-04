@@ -44,7 +44,7 @@ export function MainPage() {
 								<div className='flex flex-col gap-2 min-[400px]:flex-row'>
 									<Link
 										href='/upload-audio'
-										className='inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow bg-[#247BA0] transition-colors hover:bg-[#7594a2] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
+										className='inline-flex h-10 items-center justify-center rounded-md bg-[#247BA0] px-8 text-sm font-medium text-primary-foreground shadow  transition-colors hover:bg-[#7594a2] focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
 										prefetch={false}
 									>
 										Start Singing
