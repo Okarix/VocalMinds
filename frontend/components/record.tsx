@@ -3,11 +3,16 @@ import React, { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { useRouter } from 'next/navigation';
+import { useChat } from '@/context/ChatContext';
+import axios from 'axios';
 
 export function RecordPage() {
-	const [file, setFile] = useState(null);
+	const [file, setFile] = useState<File | null>(null);
 	const [isUploading, setIsUploading] = useState(false);
 	const [fileName, setFileName] = useState('');
+	const router = useRouter();
+	const { addMessage } = useChat();
 
 	const handleFileChange = (event: React.ChangeEvent<HTMLInputElement> | any) => {
 		const selectedFile = event.target.files[0];
@@ -28,12 +33,14 @@ export function RecordPage() {
 		formData.append('audio', file);
 
 		try {
-			const response = await fetch('http://localhost:3000/analyze', {
-				method: 'POST',
-				body: formData,
+			const response = await axios.post('http://localhost:3000/analyze', formData, {
+				headers: {
+					'Content-Type': 'multipart/form-data',
+				},
 			});
-			const result = await response.json();
-			alert(`Feedback: ${result.feedback}`);
+			const result = response.data;
+			addMessage({ role: 'system', content: JSON.stringify(result, null, 2), timestamp: new Date().toISOString() });
+			router.push('/chat');
 		} catch (error) {
 			console.error('Error uploading file:', error);
 			alert('There was an error uploading the file. Please try again.');
