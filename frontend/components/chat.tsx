@@ -1,13 +1,61 @@
 'use client';
-import React, { useEffect } from 'react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useChat } from '@/context/ChatContext';
 
+function Message({ content }: any) {
+	return (
+		<>
+			<div>
+				<h2>Pitch</h2>
+				<p>Rating: {content.pitch.rating}</p>
+				<p>Feedback: {content.pitch.feedback}</p>
+			</div>
+			<div>
+				<h2>Timbre</h2>
+				<p>Rating: {content.timbre.rating}</p>
+				<p>Feedback: {content.timbre.feedback}</p>
+			</div>
+			<div>
+				<h2>Dynamics</h2>
+				<p>Rating: {content.dynamics.rating}</p>
+				<p>Feedback: {content.dynamics.feedback}</p>
+			</div>
+			<div>
+				<h2>Articulation</h2>
+				<p>Rating: {content.articulation.rating}</p>
+				<p>Feedback: {content.articulation.feedback}</p>
+			</div>
+			<div>
+				<h2>Rhythm</h2>
+				<p>Rating: {content.rhythm.rating}</p>
+				<p>Feedback: {content.rhythm.feedback}</p>
+			</div>
+			<div>
+				<h2>Breath Control</h2>
+				<p>Rating: {content.breath_control.rating}</p>
+				<p>Feedback: {content.breath_control.feedback}</p>
+			</div>
+			<div>
+				<h2>Vibrato</h2>
+				<p>Rating: {content.vibrato.rating}</p>
+				<p>Feedback: {content.vibrato.feedback}</p>
+			</div>
+		</>
+	);
+}
+
 export function ChatPage() {
 	const { messages } = useChat();
-	console.log(messages);
+	const parsedMessages = messages.map((item: any) => {
+		return {
+			...item,
+			content: JSON.parse(item.content),
+		};
+	});
+
+	console.log(parsedMessages);
 
 	return (
 		<div className='flex flex-col h-screen w-full bg-background'>
@@ -21,7 +69,7 @@ export function ChatPage() {
 				</div>
 			</header>
 			<div className='flex-1 overflow-auto p-4 md:p-6'>
-				{messages.map((message, index) => (
+				{parsedMessages.map((message: any, index: number) => (
 					<div
 						key={index}
 						className={`flex items-start gap-4 ${message.role === 'system' ? 'justify-start' : 'justify-end'}`}
@@ -33,7 +81,9 @@ export function ChatPage() {
 							</Avatar>
 						) : null}
 						<div className={`grid gap-2 ${message.role === 'system' ? 'bg-card' : 'bg-primary text-primary-foreground'} p-3 rounded-lg shadow-sm max-w-[80%]`}>
-							<pre className='text-sm whitespace-pre-wrap'>{message.content}</pre>
+							<pre className='text-sm whitespace-pre-wrap'>
+								<Message content={message.content} />
+							</pre>
 							<div className='text-xs text-muted-foreground'>{new Date(message.timestamp).toLocaleTimeString()}</div>
 						</div>
 						{message.role === 'user' ? (
