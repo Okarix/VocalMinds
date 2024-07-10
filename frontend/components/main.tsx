@@ -47,7 +47,7 @@ export function MainPage() {
 								<div className='flex flex-col gap-2 min-[400px]:flex-row'>
 									<Link
 										href='/upload-audio'
-										className='inline-flex h-12 items-center justify-center rounded-md bg-[#247BA0] px-10 text-ms font-medium text-[#fff] shadow  transition-colors hover:bg-[#7594a2] focus-visible:outline-none focus-visible:ring-1 w-full md:w-80 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
+										className='inline-flex h-12 items-center justify-center rounded-[4px] bg-[#247BA0] px-10 text-ms font-medium text-[#fff] shadow  transition-colors hover:bg-[#7594a2] focus-visible:outline-none focus-visible:ring-1 w-full md:w-80 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
 										prefetch={false}
 									>
 										Start Singing
@@ -59,7 +59,7 @@ export function MainPage() {
 								width='550'
 								height='550'
 								alt='Hero'
-								className='mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square'
+								className='mx-auto aspect-video overflow-hidden rounded-xl object-cover sm:w-full lg:order-last lg:aspect-square rounded-[4px]'
 							/>
 						</div>
 					</div>
@@ -121,7 +121,7 @@ export function MainPage() {
 								src='./vocalGirl.webp'
 								alt='Features'
 								className='mx-auto aspect-video overflow-hidden rounded-xl object-fill
-                 object-top sm:w-full lg:order-last w-[550px] h-[500px] '
+                 object-top sm:w-full lg:order-last w-[550px] h-[500px] rounded-[4px]'
 							/>
 						</div>
 					</div>
@@ -136,7 +136,7 @@ export function MainPage() {
 							</div>
 						</div>
 						<div className='mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12'>
-							<Card className='p-6 bg-muted border-[#247BA0]'>
+							<Card className='p-6 bg-muted border-[#247BA0] rounded-[4px]'>
 								<div className='flex items-start gap-4'>
 									<div className='rounded-full bg-primary text-primary-foreground w-12 h-12 flex items-center justify-center'>
 										<UserIcon className='h-6 w-6' />
@@ -149,7 +149,7 @@ export function MainPage() {
 								<Separator className='my-4' />
 								<p className='text-muted-foreground'>"VocalMinds AI has been a game-changer for my singing journey. The personalized exercises and real-time feedback have helped me improve my technique and confidence immensely."</p>
 							</Card>
-							<Card className='p-6 bg-muted border-[#247BA0]'>
+							<Card className='p-6 bg-muted border-[#247BA0] rounded-[4px]'>
 								<div className='flex items-start gap-4'>
 									<div className='rounded-full bg-primary text-primary-foreground w-12 h-12 flex items-center justify-center'>
 										<UserIcon className='h-6 w-6' />
