@@ -174,7 +174,7 @@ export function RecordPage() {
 							<CardTitle>Upload Audio</CardTitle>
 							<CardDescription>Select an audio file from your device to send.</CardDescription>
 						</CardHeader>
-						<CardContent className='text-[#fff]'>
+						<CardContent>
 							<Input
 								type='file'
 								id='audio-upload'
