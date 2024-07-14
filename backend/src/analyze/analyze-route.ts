@@ -1,6 +1,7 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
 import { analyzeWithOpenAI, runPythonScript } from './analyze-service';
+import path from 'path';
 
 const analyzeRoute = express.Router();
 const upload = multer({ dest: 'uploads/' });
@@ -16,7 +17,7 @@ analyzeRoute.post('/', upload.single('audio'), async (req: Request, res: Respons
 		const { outputPath, analysisText } = await runPythonScript(filePath);
 		const feedback = await analyzeWithOpenAI(analysisText);
 
-		res.json(feedback);
+		res.json({ feedback, outputPath: `/results/${path.basename(outputPath)}` });
 	} catch (error) {
 		console.error(`Error: ${(error as Error).message}`);
 		res.status(500).send('Server error');

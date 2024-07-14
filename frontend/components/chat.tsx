@@ -6,52 +6,154 @@ import { useChat } from '@/context/ChatContext';
 
 function Message({ content }: any) {
 	return (
-		<>
-			<div>
-				<h2>Pitch</h2>
-				<p>Rating: {content.pitch.rating}</p>
-				<p>Feedback: {content.pitch.feedback}</p>
+		<div className='space-y-4'>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Pitch</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.pitch.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>Feedback:</span> {content.feedback.pitch.feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>Recommendations:</span> {content.feedback.pitch.recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>Exercises:</span> {content.feedback.pitch.exercises}
+				</p>
 			</div>
-			<div>
-				<h2>Timbre</h2>
-				<p>Rating: {content.timbre.rating}</p>
-				<p>Feedback: {content.timbre.feedback}</p>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Timbre</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.timbre.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>Feedback:</span> {content.feedback.timbre.feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>Recommendations:</span> {content.feedback.timbre.recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>Exercises:</span> {content.feedback.timbre.exercises}
+				</p>
 			</div>
-			<div>
-				<h2>Dynamics</h2>
-				<p>Rating: {content.dynamics.rating}</p>
-				<p>Feedback: {content.dynamics.feedback}</p>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Dynamics</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.dynamics.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>Feedback:</span> {content.feedback.dynamics.feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>Recommendations:</span> {content.feedback.dynamics.recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>Exercises:</span> {content.feedback.dynamics.exercises}
+				</p>
 			</div>
-			<div>
-				<h2>Articulation</h2>
-				<p>Rating: {content.articulation.rating}</p>
-				<p>Feedback: {content.articulation.feedback}</p>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Articulation</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.articulation.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>Feedback:</span> {content.feedback.articulation.feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>Recommendations:</span> {content.feedback.articulation.recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>Exercises:</span> {content.feedback.articulation.exercises}
+				</p>
 			</div>
-			<div>
-				<h2>Rhythm</h2>
-				<p>Rating: {content.rhythm.rating}</p>
-				<p>Feedback: {content.rhythm.feedback}</p>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Rhythm</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.rhythm.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>Feedback:</span> {content.feedback.rhythm.feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>Recommendations:</span> {content.feedback.rhythm.recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>Exercises:</span> {content.feedback.rhythm.exercises}
+				</p>
 			</div>
-			<div>
-				<h2>Breath Control</h2>
-				<p>Rating: {content.breath_control.rating}</p>
-				<p>Feedback: {content.breath_control.feedback}</p>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Breath Control</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.breath_control.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>Feedback:</span> {content.feedback.breath_control.feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>Recommendations:</span> {content.feedback.breath_control.recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>Exercises:</span> {content.feedback.breath_control.exercises}
+				</p>
 			</div>
-			<div>
-				<h2>Vibrato</h2>
-				<p>Rating: {content.vibrato.rating}</p>
-				<p>Feedback: {content.vibrato.feedback}</p>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Vibrato</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.vibrato.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>Feedback:</span> {content.feedback.vibrato.feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>Recommendations:</span> {content.feedback.vibrato.recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>Exercises:</span> {content.feedback.vibrato.exercises}
+				</p>
 			</div>
-		</>
+			<div className='border-b pb-4'>
+				<h2 className='text-xl font-semibold'>Overall</h2>
+				<p>
+					<span className='font-semibold'>Rating:</span> {content.feedback.overall.rating}
+				</p>
+				<p>
+					<span className='font-semibold'>General Feedback:</span> {content.feedback.overall.general_feedback}
+				</p>
+				<p>
+					<span className='font-semibold'>General Recommendations:</span> {content.feedback.overall.general_recommendations}
+				</p>
+				<p>
+					<span className='font-semibold'>General Exercises:</span> {content.feedback.overall.general_exercises}
+				</p>
+			</div>
+			{content.outputPath && (
+				<div className='mt-4'>
+					<h2 className='text-xl font-semibold'>Analysis Graph</h2>
+					<img
+						src={content.outputPath}
+						alt='Analysis Graph'
+						className='border rounded-lg shadow-lg'
+					/>
+				</div>
+			)}
+		</div>
 	);
 }
 
 export function ChatPage() {
 	const { messages } = useChat();
 	const parsedMessages = messages.map((item: any) => {
+		let parsedContent;
+		try {
+			parsedContent = JSON.parse(item.content);
+		} catch (error) {
+			console.error('Failed to parse JSON content:', error);
+			parsedContent = { error: 'Invalid JSON format' };
+		}
 		return {
 			...item,
-			content: JSON.parse(item.content),
+			content: parsedContent,
 		};
 	});
 
