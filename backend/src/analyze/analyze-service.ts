@@ -1,6 +1,7 @@
 import { exec } from 'child_process';
 import OpenAI from 'openai';
-import { systemPromptJson } from './analyze-type';
+import { createClient } from '@supabase/supabase-js';
+import fs from 'fs';
 
 const openai = new OpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
@@ -106,5 +107,30 @@ export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
 	} catch (e: any) {
 		console.log(e.message);
 		throw e;
+	}
+}
+
+const supabase = createClient(`${process.env.SUPABASE_URL!}`, `${process.env.SUPABASE_API!}`);
+
+export async function uploadToSupabase(filePath: string, fileName: string): Promise<string | null> {
+	try {
+		const fileBuffer = fs.readFileSync(filePath);
+
+		const { data, error } = await supabase.storage.from('Graphs').upload(fileName, fileBuffer, {
+			cacheControl: '3600',
+			upsert: false,
+		});
+
+		if (error) {
+			console.error('Error uploading to Supabase:', error.message);
+			return null;
+		} else {
+			console.log('File successfully uploaded to Supabase:', data.path);
+			const { data: uploadData } = supabase.storage.from('Graphs').getPublicUrl(fileName);
+			return uploadData.publicUrl;
+		}
+	} catch (error) {
+		console.error('Error reading file or uploading to Supabase:', (error as Error).message);
+		return null;
 	}
 }
