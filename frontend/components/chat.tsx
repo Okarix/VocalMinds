@@ -5,129 +5,65 @@ import { Button } from '@/components/ui/button';
 import { useChat } from '@/context/ChatContext';
 import Link from 'next/link';
 
-function Message({ content }: any) {
+const emojiMap: Record<string, string> = {
+	pitch: '🎵',
+	timbre: '🎶',
+	dynamics: '📈',
+	articulation: '🗣️',
+	rhythm: '🕺',
+	breath_control: '💨',
+	vibrato: '🎤',
+	overall: '🌟',
+};
+
+interface FeedbackContent {
+	rating: string;
+	feedback: string;
+	recommendations: string;
+	exercises: string;
+}
+
+interface Content {
+	feedback: {
+		pitch: FeedbackContent;
+		timbre: FeedbackContent;
+		dynamics: FeedbackContent;
+		articulation: FeedbackContent;
+		rhythm: FeedbackContent;
+		breath_control: FeedbackContent;
+		vibrato: FeedbackContent;
+		overall: FeedbackContent;
+	};
+	outputPath?: string;
+}
+
+function Message({ content }: { content: Content }) {
+	const aspects: (keyof Content['feedback'])[] = ['pitch', 'timbre', 'dynamics', 'articulation', 'rhythm', 'breath_control', 'vibrato', 'overall'];
+
 	return (
 		<div className='space-y-4'>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Pitch</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.pitch.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>Feedback:</span> {content.feedback.pitch.feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>Recommendations:</span> {content.feedback.pitch.recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>Exercises:</span> {content.feedback.pitch.exercises}
-				</p>
-			</div>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Timbre</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.timbre.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>Feedback:</span> {content.feedback.timbre.feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>Recommendations:</span> {content.feedback.timbre.recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>Exercises:</span> {content.feedback.timbre.exercises}
-				</p>
-			</div>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Dynamics</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.dynamics.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>Feedback:</span> {content.feedback.dynamics.feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>Recommendations:</span> {content.feedback.dynamics.recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>Exercises:</span> {content.feedback.dynamics.exercises}
-				</p>
-			</div>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Articulation</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.articulation.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>Feedback:</span> {content.feedback.articulation.feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>Recommendations:</span> {content.feedback.articulation.recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>Exercises:</span> {content.feedback.articulation.exercises}
-				</p>
-			</div>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Rhythm</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.rhythm.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>Feedback:</span> {content.feedback.rhythm.feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>Recommendations:</span> {content.feedback.rhythm.recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>Exercises:</span> {content.feedback.rhythm.exercises}
-				</p>
-			</div>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Breath Control</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.breath_control.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>Feedback:</span> {content.feedback.breath_control.feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>Recommendations:</span> {content.feedback.breath_control.recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>Exercises:</span> {content.feedback.breath_control.exercises}
-				</p>
-			</div>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Vibrato</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.vibrato.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>Feedback:</span> {content.feedback.vibrato.feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>Recommendations:</span> {content.feedback.vibrato.recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>Exercises:</span> {content.feedback.vibrato.exercises}
-				</p>
-			</div>
-			<div className='border-b pb-4'>
-				<h2 className='text-xl font-semibold'>Overall</h2>
-				<p>
-					<span className='font-semibold'>Rating:</span> {content.feedback.overall.rating}
-				</p>
-				<p>
-					<span className='font-semibold'>General Feedback:</span> {content.feedback.overall.general_feedback}
-				</p>
-				<p>
-					<span className='font-semibold'>General Recommendations:</span> {content.feedback.overall.general_recommendations}
-				</p>
-				<p>
-					<span className='font-semibold'>General Exercises:</span> {content.feedback.overall.general_exercises}
-				</p>
-			</div>
+			{aspects.map(aspect => (
+				<div
+					key={aspect}
+					className='border-b pb-4'
+				>
+					<h2 className='text-xl font-semibold'>
+						{emojiMap[aspect]} {aspect.charAt(0).toUpperCase() + aspect.slice(1)}
+					</h2>
+					<p>
+						<span className='font-semibold'>Rating:</span> {content.feedback[aspect].rating}
+					</p>
+					<p>
+						<span className='font-semibold'>Feedback:</span> {content.feedback[aspect].feedback}
+					</p>
+					<p>
+						<span className='font-semibold'>Recommendations:</span> {content.feedback[aspect].recommendations}
+					</p>
+					<p>
+						<span className='font-semibold'>Exercises:</span> {content.feedback[aspect].exercises}
+					</p>
+				</div>
+			))}
 			{content.outputPath && (
 				<div className='mt-4'>
 					<h2 className='text-xl font-semibold'>Analysis Graph</h2>
@@ -157,8 +93,6 @@ export function ChatPage() {
 			content: parsedContent,
 		};
 	});
-
-	console.log(parsedMessages);
 
 	return (
 		<>

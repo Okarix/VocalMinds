@@ -72,9 +72,9 @@ export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
     },
     "overall": {
       "rating": "value",
-      "general_feedback": "value",
-      "general_recommendations": "value",
-      "general_exercises": "value"
+      "feedback": "value",
+      "recommendations": "value",
+      "exercises": "value"
     }
   }
   </json>`;
