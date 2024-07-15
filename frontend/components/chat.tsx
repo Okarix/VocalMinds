@@ -172,7 +172,7 @@ export function ChatPage() {
 				<header className='flex items-center h-16 px-4 border-b bg-card shadow-sm md:px-6'>
 					<div className='flex items-center gap-3'>
 						<Avatar className='w-8 h-8'>
-							<AvatarImage src='/placeholder-user.jpg' />
+							<AvatarImage src='/voice-assistant.png' />
 							<AvatarFallback>VA</AvatarFallback>
 						</Avatar>
 						<h2 className='text-lg font-medium'>Vocal Assistant</h2>
