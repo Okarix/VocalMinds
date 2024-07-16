@@ -7,6 +7,8 @@ const openai = new OpenAI({
 	apiKey: process.env.OPENAI_API_KEY,
 });
 
+const supabase = createClient(`${process.env.SUPABASE_URL!}`, `${process.env.SUPABASE_API!}`);
+
 export async function runPythonScript(filePath: string): Promise<{ outputPath: string; analysisText: string }> {
 	return new Promise((resolve, reject) => {
 		exec(`python ./voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
@@ -116,8 +118,6 @@ export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
 		throw e;
 	}
 }
-
-const supabase = createClient(`${process.env.SUPABASE_URL!}`, `${process.env.SUPABASE_API!}`);
 
 export async function uploadToSupabase(filePath: string, fileName: string): Promise<string | null> {
 	try {
