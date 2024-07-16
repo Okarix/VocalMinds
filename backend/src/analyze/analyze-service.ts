@@ -25,7 +25,7 @@ export async function runPythonScript(filePath: string): Promise<{ outputPath: s
 }
 
 export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
-	const systemPrompt = `You are a personal assistant and vocal coach. You must help users improve their voice and improve their singing technique. First, you will analyze the vocal performance using key parameters: pitch, timbre, dynamics, articulation, rhythm, breath control, and vibrato. Next, you will provide detailed feedback and personalized recommendations for improving each aspect of the vocals. This will include a vocal rating, vocal evaluation, vocal feedback, and specific exercises or techniques to improve some aspect of the vocal. Finally, you will give a general assessment of all aspects and vocals in general with general tips and exercises, techniques. Please respond only with a JSON object in the following format, enclosed within <json> and </json> tags:
+	const systemPrompt = `You are a personal assistant and vocal coach. You must help users improve their voice and improve their singing technique. First, you will analyze the vocal performance using key parameters: pitch, timbre, dynamics, articulation, rhythm, breath control, and vibrato. Next, you will provide detailed feedback and personalized recommendations for improving each aspect of the vocals. This will include a vocal rating, vocal evaluation, vocal feedback, and specific exercises or techniques to improve some aspect of the vocal. Finally, you will give a general assessment of all aspects and vocals in general with general tips and exercises, techniques. And add five songs that the vocals are similar to (similar in some aspects or the voice is similar), and explain why this song is similar to voice. Please respond only with a JSON object in the following format, enclosed within <json> and </json> tags:
   <json>
   {
     "pitch": {
@@ -76,6 +76,13 @@ export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
       "recommendations": "value",
       "exercises": "value"
     }
+		"music": {
+			"first_song": "song - explain",
+			"second_song": "song - explain",
+			"third_song": "song - explain",
+			"fourth_song": "song - explain",
+			"fifth_song": "song - explain",
+		}
   }
   </json>`;
 

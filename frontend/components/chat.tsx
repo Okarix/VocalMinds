@@ -21,6 +21,11 @@ interface FeedbackContent {
 	feedback: string;
 	recommendations: string;
 	exercises: string;
+	first_song: string;
+	second_song: string;
+	third_song: string;
+	fourth_song: string;
+	fifth_song: string;
 }
 
 interface Content {
@@ -33,6 +38,7 @@ interface Content {
 		breath_control: FeedbackContent;
 		vibrato: FeedbackContent;
 		overall: FeedbackContent;
+		music: FeedbackContent;
 	};
 	outputPath?: string;
 }
@@ -64,6 +70,36 @@ function Message({ content }: { content: Content }) {
 					</p>
 				</div>
 			))}
+			{content.feedback.music && (
+				<>
+					<h2 className='text-xl font-semibold'>Songs similar to your vocals</h2>
+					{content.feedback.music.first_song && (
+						<p>
+							<span className='font-semibold'>First song:</span> {content.feedback.music.first_song}
+						</p>
+					)}
+					{content.feedback.music.second_song && (
+						<p>
+							<span className='font-semibold'>Second song:</span> {content.feedback.music.second_song}
+						</p>
+					)}
+					{content.feedback.music.third_song && (
+						<p>
+							<span className='font-semibold'>Third song:</span> {content.feedback.music.third_song}
+						</p>
+					)}
+					{content.feedback.music.fourth_song && (
+						<p>
+							<span className='font-semibold'>Fourth song:</span> {content.feedback.music.fourth_song}
+						</p>
+					)}
+					{content.feedback.music.fifth_song && (
+						<p>
+							<span className='font-semibold'>Fifth song:</span> {content.feedback.music.fifth_song}
+						</p>
+					)}
+				</>
+			)}
 			{content.outputPath && (
 				<div className='mt-4'>
 					<h2 className='text-xl font-semibold'>Analysis Graph</h2>
@@ -93,6 +129,8 @@ export function ChatPage() {
 			content: parsedContent,
 		};
 	});
+
+	console.log(parsedMessages);
 
 	return (
 		<>
