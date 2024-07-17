@@ -6,7 +6,7 @@ export default function Home() {
 	return (
 		<main className='container mx-auto'>
 			<div className='flex flex-col min-h-[100dvh]'>
-				<header className='px-4 gap-1 lg:px-6 h-14 flex items-center'>
+				{/* <header className='px-4 gap-1 lg:px-6 h-14 flex items-center'>
 					<MicIcon className='h-8 w-8 text-[#247BA0]' />
 					<span className='font-bold text-xl'>VocalMinds AI</span>
 					<nav className='ml-auto flex gap-4 sm:gap-6'>
@@ -35,7 +35,7 @@ export default function Home() {
 							Contact
 						</Link>
 					</nav>
-				</header>
+				</header> */}
 				<main className='flex-1'>
 					<section className='w-full py-4	'>
 						<div className='container px-4 md:px-6'>

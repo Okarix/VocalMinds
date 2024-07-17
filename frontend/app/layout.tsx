@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Inter_Tight } from 'next/font/google';
 import './globals.css';
 import { ChatProvider } from '@/context/ChatContext';
+import Header from '@/components/ui/header';
 
 const inter = Inter_Tight({ subsets: ['latin', 'cyrillic'] });
 
