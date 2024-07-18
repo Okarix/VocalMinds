@@ -1,5 +1,5 @@
 import { emojiMap } from '@/utils/emojiMap';
-import { Feedback } from '@/app/types';
+import { Feedback } from '@/types';
 
 interface MessageProps {
 	content?: {
