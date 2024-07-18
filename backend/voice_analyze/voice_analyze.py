@@ -5,6 +5,13 @@ import matplotlib.pyplot as plt
 import numpy as np
 import parselmouth
 from parselmouth.praat import call
+from pydub import AudioSegment
+
+def convert_to_wav(file_path):
+    audio = AudioSegment.from_file(file_path)
+    wav_path = file_path.rsplit('.', 1)[0] + '.wav'
+    audio.export(wav_path, format='wav')
+    return wav_path
 
 def load_audio(file_path):
     y, sr = librosa.load(file_path, sr=None)
@@ -24,10 +31,14 @@ def analyze_dynamics(y):
     return rms
 
 def analyze_articulation(file_path):
-    snd = parselmouth.Sound(file_path)
-    intensity = call(snd, "To Intensity", 75, 0.0, "yes")
-    intensity_values = intensity.values.T
-    return intensity_values
+    try:
+        snd = parselmouth.Sound(file_path)
+        intensity = call(snd, "To Intensity", 75, 0.0, "yes")
+        intensity_values = intensity.values.T
+        return intensity_values
+    except parselmouth.PraatError as e:
+        print(f"Error analyzing articulation: {e}", file=sys.stderr)
+        return np.array([])
 
 def analyze_rhythm(y, sr):
     tempo, beats = librosa.beat.beat_track(y=y, sr=sr)
@@ -50,7 +61,12 @@ def plot_analysis_results(results, output_path):
     plt.subplots_adjust(hspace=0.8)
     
     for i, (title, data) in enumerate(results.items()):
-        axs[i].plot(data)
+        if isinstance(data, list) and len(data) > 0:
+            axs[i].plot(data)
+        elif isinstance(data, np.ndarray) and data.size > 0:
+            axs[i].plot(data)
+        else:
+            axs[i].text(0.5, 0.5, 'No data available', horizontalalignment='center', verticalalignment='center')
         axs[i].set_title(title, fontsize=8, loc='left', x=0.51)
         axs[i].tick_params(axis='both', which='major', labelsize=6)
         axs[i].title.set_fontsize(10)
@@ -63,6 +79,10 @@ def plot_analysis_results(results, output_path):
     plt.close()
 
 def main(file_path):
+    # Convert file to .wav if it's not already in .wav format
+    if not file_path.endswith('.wav'):
+        file_path = convert_to_wav(file_path)
+
     y, sr = load_audio(file_path)
 
     pitch_librosa = analyze_pitch_with_librosa(y, sr)
