@@ -9,7 +9,7 @@ const openai = new OpenAI({
 
 const supabase = createClient(`${process.env.SUPABASE_URL!}`, `${process.env.SUPABASE_API!}`);
 
-export async function runPythonScript(filePath: string): Promise<{ outputPath: string; analysisText: string }> {
+export async function runPythonScript(filePath: string): Promise<{ outputPath: string; tunedOutputPath: string; analysisText: string }> {
 	return new Promise((resolve, reject) => {
 		exec(`python ./voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
 			if (error) {
@@ -20,8 +20,9 @@ export async function runPythonScript(filePath: string): Promise<{ outputPath: s
 			}
 			const output = stdout.split('\n');
 			const outputPath = output[0].trim();
-			const analysisText = output.slice(1).join('\n').trim();
-			resolve({ outputPath, analysisText });
+			const tunedOutputPath = output[1].trim(); // Assuming the Python script prints the tuned path second
+			const analysisText = output.slice(2).join('\n').trim();
+			resolve({ outputPath, tunedOutputPath, analysisText });
 		});
 	});
 }

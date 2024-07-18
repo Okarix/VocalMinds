@@ -1,8 +1,9 @@
 import sys
 import os
 import librosa
-import matplotlib.pyplot as plt
 import numpy as np
+import soundfile as sf
+import matplotlib.pyplot as plt
 import parselmouth
 from parselmouth.praat import call
 from pydub import AudioSegment
@@ -78,6 +79,16 @@ def plot_analysis_results(results, output_path):
     plt.savefig(output_path)
     plt.close()
 
+def tune_audio(file_path, semitone_shift=0):
+    audio = AudioSegment.from_file(file_path)
+    tuned_audio = audio._spawn(audio.raw_data, overrides={
+        "frame_rate": int(audio.frame_rate * (2.0 ** (semitone_shift / 12.0)))
+    }).set_frame_rate(audio.frame_rate)
+    
+    tuned_wav_path = file_path.rsplit('.', 1)[0] + '_tuned.wav'
+    tuned_audio.export(tuned_wav_path, format='wav')
+    return tuned_wav_path
+
 def main(file_path):
     # Convert file to .wav if it's not already in .wav format
     if not file_path.endswith('.wav'):
@@ -109,8 +120,10 @@ def main(file_path):
     result_files = os.listdir('results')
     next_index = len(result_files) + 1
     output_path = f"results/analysis_results_{next_index}.png"
-
     plot_analysis_results(results, output_path)
+
+    # Tuning audio
+    tuned_output_path = tune_audio(file_path, semitone_shift=2)
 
     # Extract the first value from rhythm_tempo for formatting
     rhythm_tempo_value = rhythm_tempo if np.isscalar(rhythm_tempo) else rhythm_tempo[0]
@@ -125,13 +138,14 @@ def main(file_path):
         f"Vibrato Analysis (Pitch): {np.mean(vibrato):.2f} Hz"
     )
 
-    return output_path, analysis_text
+    return output_path, tuned_output_path, analysis_text
 
 if __name__ == "__main__":
     if len(sys.argv) < 2:
         print("Usage: python analyze_audio.py <file_path>")
     else:
         file_path = sys.argv[1]
-        output_path, analysis_text = main(file_path)
+        output_path, tuned_output_path, analysis_text = main(file_path)
         print(output_path)
+        print(tuned_output_path)
         print(analysis_text)
