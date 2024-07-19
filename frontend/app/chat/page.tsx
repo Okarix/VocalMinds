@@ -5,9 +5,47 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import Link from 'next/link';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { useState } from 'react';
+import axios from 'axios';
 
 export default function ChatPage() {
-	const { messages } = useChat();
+	const { messages, addMessage } = useChat();
+	const [message, setMessage] = useState('');
+
+	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+
+		if (!message.trim()) {
+			return;
+		}
+
+		const newMessage = {
+			role: 'user',
+			content: message,
+			timestamp: new Date().toISOString(),
+		};
+
+		addMessage(newMessage);
+
+		try {
+			const response = await axios.post('http://localhost:3000/analyze/chat', {
+				message,
+			});
+
+			const data = response.data.message;
+			const systemMessage = {
+				role: 'system',
+				content: JSON.stringify(data),
+				timestamp: new Date().toISOString(),
+			};
+			addMessage(systemMessage);
+			setMessage('');
+		} catch (error) {
+			console.error('Error sending message:', error);
+		} finally {
+			setMessage('');
+		}
+	};
 
 	return (
 		<main className='container mx-auto'>
@@ -41,7 +79,7 @@ export default function ChatPage() {
 							)}
 							<div className={`grid gap-2 ${message.role === 'system' ? 'bg-card' : 'bg-primary text-primary-foreground'} p-3 rounded-lg shadow-sm max-w-[80%]`}>
 								<pre className='text-sm whitespace-pre-wrap'>
-									<Message content={message.content ? JSON.parse(message.content) : undefined} />
+									<Message content={isValidJSON(message.content) ? JSON.parse(message.content) : message.content} />
 								</pre>
 								<div className='text-xs text-muted-foreground'>{new Date(message.timestamp).toLocaleTimeString()}</div>
 							</div>
@@ -55,15 +93,22 @@ export default function ChatPage() {
 					))}
 				</div>
 				<div className='bg-card p-4 border-t shadow-sm'>
-					<form className='relative'>
+					<form
+						className='relative'
+						onSubmit={handleSubmit}
+					>
 						<Textarea
 							placeholder='Type your message...'
 							name='message'
 							id='message'
 							rows={1}
+							value={message}
+							onChange={e => setMessage(e.target.value)}
+							className='min-h-[48px] rounded-2xl resize-none p-4 border border-neutral-400 shadow-sm pr-16'
 						/>
 						<Button
 							type='submit'
+							size='icon'
 							className='absolute w-8 h-8 top-3 right-3'
 						>
 							<ArrowUpIcon className='w-4 h-4' />
@@ -94,4 +139,13 @@ function ArrowUpIcon(props: React.HTMLAttributes<SVGElement>) {
 			<path d='M12 19V5' />
 		</svg>
 	);
+}
+
+function isValidJSON(str: string): boolean {
+	try {
+		JSON.parse(str);
+		return true;
+	} catch {
+		return false;
+	}
 }

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import multer from 'multer';
-import { analyzeWithOpenAI, runPythonScript, uploadToSupabase } from './analyze-service';
+import { analyzeWithOpenAI, runPythonScript, uploadToSupabase, conversationHistory } from './analyze-service';
 import path from 'path';
 
 const analyzeRoute = express.Router();
@@ -26,6 +26,23 @@ analyzeRoute.post('/', upload.single('audio'), async (req: Request, res: Respons
 		}
 
 		res.json({ feedback, outputPath: publicUrl, tunedOutputPath: tunedPublicUrl });
+	} catch (error) {
+		console.error(`Error: ${(error as Error).message}`);
+		res.status(500).send('Server error');
+	}
+});
+
+analyzeRoute.post('/chat', async (req: Request, res: Response) => {
+	const { message } = req.body;
+
+	if (!message) {
+		return res.status(400).send('No message provided');
+	}
+
+	try {
+		conversationHistory.push({ role: 'user', content: message });
+		const response = await analyzeWithOpenAI(message);
+		res.json(response);
 	} catch (error) {
 		console.error(`Error: ${(error as Error).message}`);
 		res.status(500).send('Server error');

@@ -9,6 +9,8 @@ const openai = new OpenAI({
 
 const supabase = createClient(`${process.env.SUPABASE_URL!}`, `${process.env.SUPABASE_API!}`);
 
+export let conversationHistory: { role: 'system' | 'user'; content: string }[] = [];
+
 export async function runPythonScript(filePath: string): Promise<{ outputPath: string; tunedOutputPath: string; analysisText: string }> {
 	return new Promise((resolve, reject) => {
 		exec(`python ./voice_analyze/voice_analyze.py ${filePath}`, (error, stdout, stderr) => {
@@ -86,18 +88,17 @@ export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
 			"fourth_song": "song - explain",
 			"fifth_song": "song - explain",
 		}
+		"message": "your answer for user message"
   }
   </json>`;
 
-	const userPrompt = analysisText;
+	conversationHistory.push({ role: 'system', content: systemPrompt });
+	conversationHistory.push({ role: 'user', content: analysisText });
 
 	try {
 		const response = await openai.chat.completions.create({
 			model: 'gpt-4o',
-			messages: [
-				{ role: 'system', content: systemPrompt },
-				{ role: 'user', content: userPrompt },
-			],
+			messages: conversationHistory,
 		});
 
 		const res: string | null = response.choices[0].message.content;
@@ -106,6 +107,7 @@ export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
 			const jsonEndIndex = res.indexOf('</json>');
 			if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
 				const jsonResponse = JSON.parse(res.slice(jsonStartIndex, jsonEndIndex));
+				conversationHistory.push({ role: 'system', content: JSON.stringify(jsonResponse) });
 				return jsonResponse;
 			} else {
 				console.error('Response received:', res);
