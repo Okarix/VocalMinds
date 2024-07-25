@@ -1,6 +1,11 @@
+'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function Header() {
+	const pathname = usePathname();
+	console.log(pathname);
+
 	return (
 		<header className='px-4 gap-1 lg:px-6 h-14 flex items-center'>
 			<Link
@@ -10,32 +15,34 @@ export default function Header() {
 				<MicIcon className='h-8 w-8 text-[#247BA0]' />
 				<span className='font-bold text-xl'>VocalMinds AI</span>
 			</Link>
-			<nav className='ml-auto flex gap-4 sm:gap-6'>
-				<Link
-					href='#features'
-					className='text-ms font-medium hover:underline underline-offset-4'
-					style={{ textDecorationColor: '#247BA0' }}
-					prefetch={false}
-				>
-					Features
-				</Link>
-				<Link
-					href='#'
-					className='text-ms font-medium hover:underline underline-offset-4'
-					style={{ textDecorationColor: '#247BA0' }}
-					prefetch={false}
-				>
-					About
-				</Link>
-				<Link
-					href='#'
+			{pathname === '/upload-audio' ? null : (
+				<nav className='ml-auto flex gap-4 sm:gap-6'>
+					<Link
+						href='#features'
+						className='text-ms font-medium hover:underline underline-offset-4'
+						style={{ textDecorationColor: '#247BA0' }}
+						prefetch={false}
+					>
+						Features
+					</Link>
+					<Link
+						href='#about'
+						className='text-ms font-medium hover:underline underline-offset-4'
+						style={{ textDecorationColor: '#247BA0' }}
+						prefetch={false}
+					>
+						About
+					</Link>
+					{/* <Link
+					href='#about'
 					className='text-ms font-medium hover:underline underline-offset-4'
 					style={{ textDecorationColor: '#247BA0' }}
 					prefetch={false}
 				>
 					Contact
-				</Link>
-			</nav>
+				</Link> */}
+				</nav>
+			)}
 		</header>
 	);
 }
