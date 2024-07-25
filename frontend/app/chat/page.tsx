@@ -7,6 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import axios from 'axios';
+import { ChatMessage } from '@/context/ChatContext';
 
 export default function ChatPage() {
 	const { messages, addMessage } = useChat();
@@ -19,7 +20,7 @@ export default function ChatPage() {
 			return;
 		}
 
-		const newMessage = {
+		const newMessage: ChatMessage = {
 			role: 'user',
 			content: message,
 			timestamp: new Date().toISOString(),
@@ -33,7 +34,7 @@ export default function ChatPage() {
 			});
 
 			const data = response.data.message;
-			const systemMessage = {
+			const systemMessage: ChatMessage = {
 				role: 'system',
 				content: JSON.stringify(data),
 				timestamp: new Date().toISOString(),

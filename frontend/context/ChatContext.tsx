@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState } from 'react';
 
-interface ChatMessage {
+export interface ChatMessage {
 	role: 'user' | 'system';
 	content: string;
 	timestamp: string;
