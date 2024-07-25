@@ -1,41 +1,12 @@
 import Link from 'next/link';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import Footer from '@/components/ui/footer';
 
 export default function Home() {
 	return (
 		<main className='container mx-auto'>
 			<div className='flex flex-col min-h-[100dvh]'>
-				{/* <header className='px-4 gap-1 lg:px-6 h-14 flex items-center'>
-					<MicIcon className='h-8 w-8 text-[#247BA0]' />
-					<span className='font-bold text-xl'>VocalMinds AI</span>
-					<nav className='ml-auto flex gap-4 sm:gap-6'>
-						<Link
-							href='#'
-							className='text-ms font-medium hover:underline underline-offset-4'
-							style={{ textDecorationColor: '#247BA0' }}
-							prefetch={false}
-						>
-							Features
-						</Link>
-						<Link
-							href='#'
-							className='text-ms font-medium hover:underline underline-offset-4'
-							style={{ textDecorationColor: '#247BA0' }}
-							prefetch={false}
-						>
-							About
-						</Link>
-						<Link
-							href='#'
-							className='text-ms font-medium hover:underline underline-offset-4'
-							style={{ textDecorationColor: '#247BA0' }}
-							prefetch={false}
-						>
-							Contact
-						</Link>
-					</nav>
-				</header> */}
 				<main className='flex-1'>
 					<section className='w-full py-4	'>
 						<div className='container px-4 md:px-6'>
@@ -69,7 +40,12 @@ export default function Home() {
 						<div className='container px-4 md:px-6'>
 							<div className='flex flex-col items-center justify-center space-y-4 text-center'>
 								<div className='space-y-7'>
-									<div className='inline-block text-[#247BA0] rounded-lg bg-muted px-3 py-1 text-ms'>Key Features</div>
+									<div
+										className='inline-block text-[#247BA0] rounded-lg bg-muted px-3 py-1 text-ms'
+										id='features'
+									>
+										Key Features
+									</div>
 									<h2 className='text-3xl font-bold tracking-tighter sm:text-5xl'>Elevate Your Vocal Road</h2>
 									<p className='max-w-[900px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed'>VocalMinds AI offers a comprehensive suite of tools to help you unlock your true vocal potential. From personalized exercises to real-time feedback, we're here to guide you every step of the way.</p>
 								</div>
@@ -143,8 +119,8 @@ export default function Home() {
 											<UserIcon className='h-6 w-6' />
 										</div>
 										<div>
-											<h3 className='text-xl font-bold'>Emily Wilkins</h3>
-											<p className='text-muted-foreground'>Aspiring Singer</p>
+											<h3 className='text-xl font-bold'>Rassul Aitkali</h3>
+											<p className='text-muted-foreground'>Musician, CEO Separator.AI</p>
 										</div>
 									</div>
 									<Separator className='my-4' />
@@ -156,38 +132,18 @@ export default function Home() {
 											<UserIcon className='h-6 w-6' />
 										</div>
 										<div>
-											<h3 className='text-xl font-bold'>Michael Gonzalez</h3>
-											<p className='text-muted-foreground'>Professional Singer</p>
+											<h3 className='text-xl font-bold'>Kural Miras</h3>
+											<p className='text-muted-foreground'>Musician, CEO FaceTune.AI</p>
 										</div>
 									</div>
 									<Separator className='my-4' />
-									<p className='text-muted-foreground'>"As a professional singer, I was skeptical about using a vocal training app, but Vocal Maestro has exceeded my expectations. The pitch training and performance analysis tools have been invaluable."</p>
+									<p className='text-muted-foreground'>"As someone with experience in singing, I was skeptical about using a vocal training app, but VocalMInds AI exceeded my expectations. The tools for pitch training and performance analysis have been invaluable."</p>
 								</Card>
 							</div>
 						</div>
 					</section>
 				</main>
-				<footer className='flex flex-col gap-2 sm:flex-row py-6 w-full shrink-0 items-center px-4 md:px-6 border-t border-[#247BA0]'>
-					<p className='text-xs text-muted-foreground'>&copy; 2024 VocalMinds AI. All rights reserved.</p>
-					<nav className='sm:ml-auto flex gap-4 sm:gap-6'>
-						<Link
-							href='#'
-							className='text-xs hover:underline underline-offset-4'
-							style={{ textDecorationColor: '#247BA0' }}
-							prefetch={false}
-						>
-							Terms of Service
-						</Link>
-						<Link
-							href='#'
-							style={{ textDecorationColor: '#247BA0' }}
-							className='text-xs hover:underline underline-offset-4'
-							prefetch={false}
-						>
-							Privacy
-						</Link>
-					</nav>
-				</footer>
+				<Footer />
 			</div>
 		</main>
 	);

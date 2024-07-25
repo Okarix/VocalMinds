@@ -12,7 +12,7 @@ export default function Header() {
 			</Link>
 			<nav className='ml-auto flex gap-4 sm:gap-6'>
 				<Link
-					href='#'
+					href='#features'
 					className='text-ms font-medium hover:underline underline-offset-4'
 					style={{ textDecorationColor: '#247BA0' }}
 					prefetch={false}
