@@ -80,6 +80,7 @@ export const Message = ({ content }: MessageProps) => {
 			{parsedContent.tunedOutputPath && (
 				<div className='mt-4'>
 					<h2 className='text-xl font-semibold'>Tuned Audio</h2>
+					<p className='my-4'>A version of your ideal voice as assessed by our assistant. (This function is under development, so it may not work correctly)</p>
 					<audio
 						controls
 						className='w-full'

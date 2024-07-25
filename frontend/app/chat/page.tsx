@@ -12,6 +12,7 @@ import { ChatMessage } from '@/context/ChatContext';
 export default function ChatPage() {
 	const { messages, addMessage } = useChat();
 	const [message, setMessage] = useState('');
+	const [isTyping, setIsTyping] = useState(false);
 
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
@@ -27,6 +28,8 @@ export default function ChatPage() {
 		};
 
 		addMessage(newMessage);
+		setMessage('');
+		setIsTyping(true);
 
 		try {
 			const response = await axios.post('http://localhost:3000/analyze/chat', {
@@ -39,11 +42,16 @@ export default function ChatPage() {
 				timestamp: new Date().toISOString(),
 			};
 			addMessage(systemMessage);
-			setMessage('');
 		} catch (error) {
 			console.error('Error sending message:', error);
+			const errorMessage: ChatMessage = {
+				role: 'system',
+				content: 'The assistant cannot answer you due to technical reasons',
+				timestamp: new Date().toISOString(),
+			};
+			addMessage(errorMessage);
 		} finally {
-			setMessage('');
+			setIsTyping(false);
 		}
 	};
 
@@ -73,7 +81,7 @@ export default function ChatPage() {
 						>
 							{message.role === 'system' && (
 								<Avatar className='w-8 h-8'>
-									<AvatarImage src='/placeholder-user.jpg' />
+									<AvatarImage src='/assistant-profile-pic.png' />
 									<AvatarFallback>VA</AvatarFallback>
 								</Avatar>
 							)}
@@ -81,16 +89,27 @@ export default function ChatPage() {
 								<pre className='text-sm whitespace-pre-wrap'>
 									<Message content={isValidJSON(message.content) ? JSON.parse(message.content) : message.content} />
 								</pre>
-								<div className='text-xs text-muted-foreground'>{new Date(message.timestamp).toLocaleTimeString()}</div>
+								<div className='text-xs text-muted-foreground'>{new Date(message.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>
 							</div>
 							{message.role === 'user' && (
 								<Avatar className='w-8 h-8'>
-									<AvatarImage src='/placeholder-user.jpg' />
+									<AvatarImage src='/cat-profile-pic.png' />
 									<AvatarFallback>YO</AvatarFallback>
 								</Avatar>
 							)}
 						</div>
 					))}
+					{isTyping && (
+						<div className='flex items-start gap-4 justify-start'>
+							<Avatar className='w-8 h-8'>
+								<AvatarImage src='/voice-assistant.png' />
+								<AvatarFallback>VA</AvatarFallback>
+							</Avatar>
+							<div className='bg-card p-3 rounded-lg shadow-sm'>
+								<p className='text-sm'>Typing...</p>
+							</div>
+						</div>
+					)}
 				</div>
 				<div className='bg-card p-4 border-t shadow-sm'>
 					<form
@@ -111,7 +130,7 @@ export default function ChatPage() {
 							size='icon'
 							className='absolute w-8 h-8 top-3 right-3'
 						>
-							<ArrowUpIcon className='w-4 h-4' />
+							<ArrowUpIcon className='w-7 h-7 hover:translate-y-[-10px] hover:h-24 hover:w-24' />
 							<span className='sr-only'>Send</span>
 						</Button>
 					</form>
