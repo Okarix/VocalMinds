@@ -3,9 +3,8 @@ import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useChat } from '@/context/ChatContext';
 import axios from 'axios';
-import { Card, CardTitle, CardDescription, CardHeader, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import AudioCard from '@/components/audio-card';
 
 export default function UploadAudioPage() {
 	const [file, setFile] = useState<File | null>(null);
@@ -127,60 +126,21 @@ export default function UploadAudioPage() {
 					<p className='text-muted-foreground'>Choose to upload a pre-recorded audio file or record your own.</p>
 				</div>
 				<div className='grid grid-cols-2 gap-4'>
-					<Card className='border-[#247BA0] rounded-[4px]'>
-						<CardHeader>
-							<CardTitle>Record Audio</CardTitle>
-							<CardDescription>Record your audio for 15 seconds.</CardDescription>
-						</CardHeader>
-						<CardContent>
-							{isRecording ? (
-								<>
-									<Button
-										type='button'
-										onClick={stopRecording}
-										className='bg-[#247BA0] hover:bg-red-600 text-[#fff] rounded-[4px]'
-									>
-										Stop Recording
-									</Button>
-									<p className='mt-2'>Recording time: {recordingTime} seconds</p>
-								</>
-							) : (
-								<Button
-									type='button'
-									onClick={startRecording}
-									className='bg-[#247BA0] hover:bg-[#7594a2] text-[#fff] rounded-[4px]'
-								>
-									Start Recording
-								</Button>
-							)}
-							{recordedBlob && (
-								<audio
-									controls
-									className='mt-2'
-								>
-									<source
-										src={URL.createObjectURL(recordedBlob)}
-										type='audio/wav'
-									/>
-								</audio>
-							)}
-						</CardContent>
-					</Card>
-					<Card className='border-[#247BA0] rounded-[4px]'>
-						<CardHeader>
-							<CardTitle>Upload Audio</CardTitle>
-							<CardDescription>Select an audio file from your device to send.</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<Input
-								type='file'
-								id='audio-upload'
-								accept='audio/*'
-								onChange={handleFileChange}
-							/>
-							{fileName && <p className='mt-2 text-green-600'>File selected: {fileName}</p>}
-						</CardContent>
-					</Card>
+					<AudioCard
+						title='Record Audio'
+						description='Record your audio for 15 seconds.'
+						isRecording={isRecording}
+						recordingTime={recordingTime}
+						onStartRecording={startRecording}
+						onStopRecording={stopRecording}
+						recordedBlob={recordedBlob}
+					/>
+					<AudioCard
+						title='Upload Audio'
+						description='Select an audio file from your device to send.'
+						onFileChange={handleFileChange}
+						fileName={fileName}
+					/>
 				</div>
 				<div className='flex justify-center'>
 					<Button

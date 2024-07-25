@@ -32,7 +32,6 @@ export default function ChatPage() {
 			const response = await axios.post('http://localhost:3000/analyze/chat', {
 				message,
 			});
-
 			const data = response.data.message;
 			const systemMessage: ChatMessage = {
 				role: 'system',
