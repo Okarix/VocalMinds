@@ -13,10 +13,27 @@ export default function UploadAudioPage() {
 	const [isRecording, setIsRecording] = useState(false);
 	const [recordedBlob, setRecordedBlob] = useState<Blob | null>(null);
 	const [recordingTime, setRecordingTime] = useState(0);
+	const [loadingMessage, setLoadingMessage] = useState('');
+
 	const mediaRecorderRef = useRef<MediaRecorder | null>(null);
 	const audioChunksRef = useRef<Blob[]>([]);
 	const router = useRouter();
 	const { addMessage } = useChat();
+
+	const loadingMessages = ['Loading...', 'Analyzing your voice...', 'Building a graph based on your voice...', 'Searching for similar performance styles...', 'Processing audio data...', 'Applying voice recognition algorithms...'];
+
+	useEffect(() => {
+		let interval: NodeJS.Timeout;
+		if (isUploading) {
+			let index = 0;
+			setLoadingMessage(loadingMessages[0]);
+			interval = setInterval(() => {
+				index = (index + 1) % loadingMessages.length;
+				setLoadingMessage(loadingMessages[index]);
+			}, 2000);
+		}
+		return () => clearInterval(interval);
+	}, [isUploading]);
 
 	useEffect(() => {
 		let interval: NodeJS.Timeout | undefined;
@@ -148,7 +165,7 @@ export default function UploadAudioPage() {
 						className='w-[40%] bg-[#247BA0] hover:bg-[#7594a2] text-[#fff] rounded-[4px]'
 						disabled={isUploading}
 					>
-						{isUploading ? 'Loading...' : 'Send Audio'}
+						{isUploading ? loadingMessage : 'Send Audio'}
 					</Button>
 				</div>
 			</form>
