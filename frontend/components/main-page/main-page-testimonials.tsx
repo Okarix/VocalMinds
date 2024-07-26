@@ -24,7 +24,7 @@ export default function MainPageTestimonials() {
 							</div>
 						</div>
 						<Separator className='my-4' />
-						<p className='text-muted-foreground'>"VocalMinds AI has been a game-changer for my singing journey. The personalized exercises and real-time feedback have helped me improve my technique and confidence immensely."</p>
+						<p className='text-muted-foreground'>&quot;VocalMinds AI has been a game-changer for my singing journey. The personalized exercises and real-time feedback have helped me improve my technique and confidence immensely.&quot;</p>
 					</Card>
 					<Card className='p-6 bg-muted border-[#247BA0] rounded-[4px]'>
 						<div className='flex items-start gap-4'>
@@ -37,7 +37,7 @@ export default function MainPageTestimonials() {
 							</div>
 						</div>
 						<Separator className='my-4' />
-						<p className='text-muted-foreground'>"As someone with experience in singing, I was skeptical about using a vocal training app, but VocalMInds AI exceeded my expectations. The tools for pitch training and performance analysis have been invaluable."</p>
+						<p className='text-muted-foreground'>&quot;As someone with experience in singing, I was skeptical about using a vocal training app, but VocalMInds AI exceeded my expectations. The tools for pitch training and performance analysis have been invaluable.&quot;</p>
 					</Card>
 				</div>
 			</div>

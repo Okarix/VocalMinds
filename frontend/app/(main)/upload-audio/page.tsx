@@ -128,7 +128,7 @@ export default function UploadAudioPage() {
 			<h1 className='text-3xl font-bold mb-6'>How to Record Audio</h1>
 			<div className='flex flex-col gap-2 mb-6'>
 				<p className='text-muted-foreground'>
-					- <strong>Record Audio:</strong> Click "Start Recording" and sing or speak for 15 seconds. Click "Stop Recording" when you're done.
+					- <strong>Record Audio:</strong> Click &quot;Start Recording&quot; and sing or speak for 15 seconds. Click &quot;Stop Recording&quot; when you&apos;re done.
 				</p>
 				<p className='text-muted-foreground'>
 					- <strong>Upload Audio:</strong> You can also upload a pre-recorded audio file from your device.
