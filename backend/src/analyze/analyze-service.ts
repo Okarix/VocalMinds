@@ -30,67 +30,66 @@ export async function runPythonScript(filePath: string): Promise<{ outputPath: s
 }
 
 export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
-	const systemPrompt = `You are a personal assistant and vocal coach. You must help users improve their voice and improve their singing technique. First, you will analyze the vocal performance using key parameters: pitch, timbre, dynamics, articulation, rhythm, breath control, and vibrato. Next, you will provide detailed feedback and personalized recommendations for improving each aspect of the vocals. This will include a vocal rating, vocal evaluation, vocal feedback, and specific exercises or techniques to improve some aspect of the vocal. Finally, you will give a general assessment of all aspects and vocals in general with general tips and exercises, techniques. And add five songs that the vocals are similar to (similar in some aspects or the voice is similar), and explain why this song is similar to voice. Please respond only with a JSON object in the following format, enclosed within <json> and </json> tags:
-  <json>
-  {
-    "pitch": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    },
-    "timbre": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    },
-    "dynamics": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    },
-    "articulation": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    },
-    "rhythm": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    },
-    "breath_control": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    },
-    "vibrato": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    },
-    "overall": {
-      "rating": "value",
-      "feedback": "value",
-      "recommendations": "value",
-      "exercises": "value"
-    }
-		"music": {
-			"first_song": "song - explain",
-			"second_song": "song - explain",
-			"third_song": "song - explain",
-			"fourth_song": "song - explain",
-			"fifth_song": "song - explain",
-		}
-		"message": "your answer for user message"
-  }
-  </json>`;
+	const systemPrompt = `You are a personal assistant and vocal coach. You must help users improve their voice and improve their singing technique. First, you will analyze the vocal performance using key parameters: pitch, timbre, dynamics, articulation, rhythm, breath control, and vibrato. Next, you will provide detailed feedback and personalized recommendations for improving each aspect of the vocals. This will include a vocal rating, vocal evaluation, vocal feedback, and specific exercises or techniques to improve some aspect of the vocal. Finally, you will give a general assessment of all aspects and vocals in general with general tips and exercises, techniques. And add five songs that the vocals are similar to (similar in some aspects or the voice is similar), and explain why this song is similar to voice. Please respond with a JSON object in the following format:
+
+{
+  "pitch": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "timbre": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "dynamics": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "articulation": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "rhythm": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "breath_control": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "vibrato": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "overall": {
+    "rating": "value",
+    "feedback": "value",
+    "recommendations": "value",
+    "exercises": "value"
+  },
+  "music": {
+    "first_song": "song - explain",
+    "second_song": "song - explain",
+    "third_song": "song - explain",
+    "fourth_song": "song - explain",
+    "fifth_song": "song - explain"
+  },
+  "message": "your answer for user message"
+}`;
 
 	conversationHistory.push({ role: 'system', content: systemPrompt });
 	conversationHistory.push({ role: 'user', content: analysisText });
@@ -99,25 +98,21 @@ export async function analyzeWithOpenAI(analysisText: string): Promise<object> {
 		const response = await openai.chat.completions.create({
 			model: 'gpt-4o',
 			messages: conversationHistory,
+			response_format: { type: 'json_object' },
 		});
 
 		const res: string | null = response.choices[0].message.content;
+		console.log(res);
+
 		if (res) {
-			const jsonStartIndex = res.indexOf('<json>') + 6;
-			const jsonEndIndex = res.indexOf('</json>');
-			if (jsonStartIndex !== -1 && jsonEndIndex !== -1) {
-				const jsonResponse = JSON.parse(res.slice(jsonStartIndex, jsonEndIndex));
-				conversationHistory.push({ role: 'system', content: JSON.stringify(jsonResponse) });
-				return jsonResponse;
-			} else {
-				console.error('Response received:', res);
-				throw new Error('No JSON response found');
-			}
+			const jsonResponse = JSON.parse(res);
+			conversationHistory.push({ role: 'system', content: JSON.stringify(jsonResponse) });
+			return jsonResponse;
 		} else {
 			throw new Error('No response from OpenAI');
 		}
 	} catch (e: any) {
-		console.log(e.message);
+		console.error('Error in analyzeWithOpenAI:', e.message);
 		throw e;
 	}
 }

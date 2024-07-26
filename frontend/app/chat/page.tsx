@@ -106,7 +106,7 @@ export default function ChatPage() {
 								<AvatarFallback>VA</AvatarFallback>
 							</Avatar>
 							<div className='bg-card p-3 rounded-lg shadow-sm'>
-								<p className='text-sm'>Typing...</p>
+								<p className='text-sm'>Answering...</p>
 							</div>
 						</div>
 					)}
