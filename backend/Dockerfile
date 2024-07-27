@@ -40,10 +40,13 @@ COPY /voice_analyze/requirements.txt /app/voice_analyze/requirements.txt
 # Добавляем команду для вывода содержимого requirements.txt
 RUN cat /app/voice_analyze/requirements.txt
 
-# Устанавливаем Python библиотеки и дополнительные зависимости
+# Устанавливаем дополнительные системные зависимости
 RUN apt-get update && \
-    apt-get install -y build-essential libssl-dev libffi-dev python3-dev ffmpeg && \
-    pip3 install --no-cache-dir -r /app/voice_analyze/requirements.txt
+    apt-get install -y build-essential libssl-dev libffi-dev python3-dev ffmpeg
+
+# Устанавливаем Python библиотеки и выводим установленные версии
+RUN pip3 install --no-cache-dir -r /app/voice_analyze/requirements.txt && \
+    pip3 freeze
 
 # Открываем порт 3000 для приложения
 EXPOSE 3000
