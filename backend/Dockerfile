@@ -44,13 +44,13 @@ RUN cat /app/voice_analyze/requirements.txt
 RUN apt-get update && \
     apt-get install -y build-essential libssl-dev libffi-dev python3-dev ffmpeg
 
-# Устанавливаем Python библиотеки по одной для диагностики
-RUN pip3 install --no-cache-dir librosa==0.10.2.post1 && \
-    pip3 install --no-cache-dir numpy==1.26.0 && \
-    pip3 install --no-cache-dir soundfile==0.12.1 && \
-    pip3 install --no-cache-dir matplotlib==3.9.1 && \
-    pip3 install --no-cache-dir praat-parselmouth==0.4.3 && \
-    pip3 install --no-cache-dir pydub==0.25.1
+# Устанавливаем Python библиотеки по одной для диагностики с выводом промежуточных результатов
+RUN pip3 install --no-cache-dir librosa==0.10.2.post1 && echo "librosa installed" && \
+    pip3 install --no-cache-dir numpy==1.26.0 && echo "numpy installed" && \
+    pip3 install --no-cache-dir soundfile==0.12.1 && echo "soundfile installed" && \
+    pip3 install --no-cache-dir matplotlib==3.9.1 && echo "matplotlib installed" && \
+    pip3 install --no-cache-dir praat-parselmouth==0.4.3 && echo "praat-parselmouth installed" && \
+    pip3 install --no-cache-dir pydub==0.25.1 && echo "pydub installed"
 
 # Выводим установленные версии библиотек
 RUN pip3 freeze
