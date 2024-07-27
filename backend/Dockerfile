@@ -36,8 +36,14 @@ RUN npm install --only=production
 # Копируем папку voice_analyze
 COPY --from=build /app/voice_analyze /app/voice_analyze
 
+# Проверяем содержимое директории
+RUN ls -la /app/voice_analyze
+
+# Проверяем наличие файла requirements.txt
+RUN if [ -f /app/voice_analyze/requirements.txt ]; then echo "requirements.txt exists"; else echo "requirements.txt not found" && exit 1; fi
+
 # Устанавливаем Python библиотеки
-RUN pip3 install -r /app/voice_analyze/requirements.txt
+RUN pip3 install --no-cache-dir -r /app/voice_analyze/requirements.txt
 
 # Открываем порт 3000 для приложения
 EXPOSE 3000
