@@ -33,9 +33,12 @@ COPY --from=build /app/package*.json ./
 # Устанавливаем только production зависимости
 RUN npm install --only=production
 
-# Копируем файл requirements.txt и устанавливаем Python библиотеки
-COPY /voice_analyze ./requirements.txt
-RUN pip3 install -r requirements.txt
+# Копируем папку voice_analyze и файл requirements.txt
+COPY /voice_analyze /app/voice_analyze
+COPY /voice_analyze/requirements.txt /app/voice_analyze/requirements.txt
+
+# Устанавливаем Python библиотеки
+RUN pip3 install -r /app/voice_analyze/requirements.txt
 
 # Открываем порт 3000 для приложения
 EXPOSE 3000
