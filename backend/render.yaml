@@ -1,9 +1,0 @@
-services:
-  - type: web
-    name: my-express-app
-    env: node
-    runtime: node
-    plan: free
-    buildCommand: npm install && npm run build
-    startCommand: npm run start
-    healthCheckPath: /

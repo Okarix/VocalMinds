@@ -32,7 +32,7 @@ export default function ChatPage() {
 		setIsTyping(true);
 
 		try {
-			const response = await axios.post('http://localhost:3000/analyze/chat', {
+			const response = await axios.post(`${process.env.BACKEND_API}/analyze/chat`, {
 				message,
 			});
 			const data = response.data.message;
