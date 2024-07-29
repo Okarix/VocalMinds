@@ -60,27 +60,39 @@ export default function UploadAudioPage() {
 	};
 
 	const startRecording = async () => {
-		const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		const mediaRecorder = new MediaRecorder(stream);
-		mediaRecorderRef.current = mediaRecorder;
-		audioChunksRef.current = [];
+		try {
+			const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+			const mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+			mediaRecorderRef.current = mediaRecorder;
+			audioChunksRef.current = [];
 
-		mediaRecorder.ondataavailable = event => {
-			audioChunksRef.current.push(event.data);
-		};
+			mediaRecorder.ondataavailable = event => {
+				audioChunksRef.current.push(event.data);
+			};
 
-		mediaRecorder.onstop = () => {
-			const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
-			setRecordedBlob(audioBlob);
-			setFile(new File([audioBlob], 'recorded_audio.wav'));
-			setFileName('recorded_audio.wav');
-		};
+			mediaRecorder.onstop = () => {
+				const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' });
+				setRecordedBlob(audioBlob);
+				console.log('Recorded audio MIME type:', audioBlob.type);
 
-		mediaRecorder.start();
-		setRecordingTime(0);
-		setIsRecording(true);
-		setFile(null);
-		setFileName('');
+				// Create a File object from the Blob
+				const file = new File([audioBlob], 'recorded_audio.webm', { type: 'audio/webm' });
+				setFile(file);
+				setFileName('recorded_audio.webm');
+
+				// Optional: Play back the recorded audio
+				const audioUrl = URL.createObjectURL(audioBlob);
+				const audio = new Audio(audioUrl);
+				audio.play();
+			};
+
+			mediaRecorder.start();
+			setRecordingTime(0);
+			setIsRecording(true);
+		} catch (error) {
+			console.error('Error starting recording:', error);
+			alert('Failed to start recording. Please check your microphone permissions.');
+		}
 	};
 
 	const stopRecording = () => {
@@ -93,18 +105,14 @@ export default function UploadAudioPage() {
 	const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 		event.preventDefault();
 
-		if (!file && !recordedBlob) {
+		if (!file) {
 			alert('Please select or record an audio file to upload.');
 			return;
 		}
 
 		setIsUploading(true);
 		const formData = new FormData();
-		if (file) {
-			formData.append('audio', file);
-		} else if (recordedBlob) {
-			formData.append('audio', recordedBlob, 'recorded_audio.wav');
-		}
+		formData.append('audio', file);
 
 		try {
 			const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/analyze`, formData, {
@@ -115,8 +123,8 @@ export default function UploadAudioPage() {
 			const result = response.data;
 			addMessage({ role: 'system', content: JSON.stringify(result, null, 2), timestamp: new Date().toISOString() });
 			router.push('/chat');
-		} catch (error) {
-			console.error('Error uploading file:', error);
+		} catch (error: any) {
+			console.error('Error uploading file:', error.response?.data || error.message);
 			alert('There was an error uploading the file. Please try again.');
 		} finally {
 			setIsUploading(false);
@@ -128,7 +136,7 @@ export default function UploadAudioPage() {
 			<h1 className='text-3xl font-bold mb-6'>How to Record Audio</h1>
 			<div className='flex flex-col gap-2 mb-6'>
 				<p className='text-muted-foreground'>
-					- <strong>Record Audio:</strong> Click &quot;Start Recording&quot; and sing or speak for 15 seconds. Click &quot;Stop Recording&quot; when you&apos;re done.
+					- <strong>Record Audio:</strong> Click "Start Recording" and sing or speak for 15 seconds. Click "Stop Recording" when you're done.
 				</p>
 				<p className='text-muted-foreground'>
 					- <strong>Upload Audio:</strong> You can also upload a pre-recorded audio file from your device.
