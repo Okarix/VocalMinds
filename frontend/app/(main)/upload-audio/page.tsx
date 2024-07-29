@@ -107,7 +107,7 @@ export default function UploadAudioPage() {
 		}
 
 		try {
-			const response = await axios.post(`${process.env.BACKEND_API}/analyze`, formData, {
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/analyze`, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 				},

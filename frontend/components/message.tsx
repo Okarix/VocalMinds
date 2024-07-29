@@ -5,8 +5,9 @@ interface MessageProps {
 	content?:
 		| {
 				feedback?: Feedback;
-				outputPath?: string;
-				tunedOutputPath?: string;
+				graphUrl?: string;
+				tunedAudioUrl?: string;
+				audioUrl?: string;
 		  }
 		| string;
 }
@@ -28,7 +29,7 @@ export const Message = ({ content }: MessageProps) => {
 	}
 
 	if (!parsedContent.feedback) {
-		return <p>No content available</p>;
+		return <p>No feedback available</p>;
 	}
 
 	const aspects: (keyof Feedback)[] = ['pitch', 'timbre', 'dynamics', 'articulation', 'rhythm', 'breath_control', 'vibrato', 'overall'];
@@ -67,17 +68,31 @@ export const Message = ({ content }: MessageProps) => {
 					))}
 				</>
 			)}
-			{parsedContent.outputPath && (
+			{parsedContent.graphUrl && (
 				<div className='mt-4'>
 					<h2 className='text-xl font-semibold'>Analysis Graph</h2>
 					<img
-						src={parsedContent.outputPath}
+						src={parsedContent.graphUrl}
 						alt='Analysis Graph'
 						className='border rounded-lg shadow-lg'
 					/>
 				</div>
 			)}
-			{parsedContent.tunedOutputPath && (
+			{parsedContent.audioUrl && (
+				<div className='mt-4'>
+					<h2 className='text-xl font-semibold'>Original Audio</h2>
+					<audio
+						controls
+						className='w-full'
+					>
+						<source
+							src={parsedContent.audioUrl}
+							type='audio/wav'
+						/>
+					</audio>
+				</div>
+			)}
+			{parsedContent.tunedAudioUrl && (
 				<div className='mt-4'>
 					<h2 className='text-xl font-semibold'>Tuned Audio</h2>
 					<p className='my-4'>A version of your ideal voice as assessed by our assistant. (This function is under development, so it may not work correctly)</p>
@@ -86,7 +101,7 @@ export const Message = ({ content }: MessageProps) => {
 						className='w-full'
 					>
 						<source
-							src={parsedContent.tunedOutputPath}
+							src={parsedContent.tunedAudioUrl}
 							type='audio/wav'
 						/>
 					</audio>
