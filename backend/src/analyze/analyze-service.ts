@@ -104,7 +104,7 @@ export const sendAudioToFastAPI = async (file: Express.Multer.File) => {
 	const formData = new FormData();
 	formData.append('file', fs.createReadStream(file.path), file.originalname);
 
-	const response = await axios.post(`${process.env.FAST_API_URL}/analyze`, formData, {
+	const response = await axios.post(`${process.env.FAST_API_URL || 'http://127.0.0.1:8000'}/analyze`, formData, {
 		headers: {
 			...formData.getHeaders(),
 		},
