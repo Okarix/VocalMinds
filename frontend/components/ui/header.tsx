@@ -36,7 +36,7 @@ export default function Header() {
 					>
 						About
 					</Link>
-					<div className='relative'>
+					{/* <div className='relative'>
 						<select
 							value={language}
 							onChange={e => setLanguage(e.target.value)}
@@ -60,7 +60,7 @@ export default function Header() {
 								<path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
 							</svg>
 						</div>
-					</div>
+					</div> */}
 				</nav>
 			)}
 		</header>
