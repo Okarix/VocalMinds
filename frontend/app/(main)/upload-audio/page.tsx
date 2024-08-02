@@ -79,9 +79,9 @@ export default function UploadAudioPage() {
 				setFile(file);
 				setFileName(`recorded_audio_${Date.now()}.webm`);
 
-				const audioUrl = URL.createObjectURL(audioBlob);
-				const audio = new Audio(audioUrl);
-				audio.play();
+				// const audioUrl = URL.createObjectURL(audioBlob);
+				// const audio = new Audio(audioUrl);
+				// audio.play();
 			};
 
 			mediaRecorder.start();
@@ -113,7 +113,7 @@ export default function UploadAudioPage() {
 		formData.append('audio', file);
 
 		try {
-			const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API || 'http://localhost:3000'}/analyze`, formData, {
+			const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_API}/analyze`, formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 				},
