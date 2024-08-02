@@ -1,9 +1,13 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 
 export default function Header() {
 	const pathname = usePathname();
+	const [language, setLanguage] = useState('English');
+
+	const languages = ['English', 'Russian', 'Kazakh'];
 
 	return (
 		<header className='px-4 gap-1 lg:px-6 h-14 flex items-center'>
@@ -15,7 +19,7 @@ export default function Header() {
 				<span className='font-bold text-xl'>VocalMinds AI</span>
 			</Link>
 			{pathname === '/upload-audio' ? null : (
-				<nav className='ml-auto flex gap-4 sm:gap-6'>
+				<nav className='ml-auto flex gap-4 sm:gap-6 items-center'>
 					<Link
 						href='#features'
 						className='text-ms font-medium hover:underline underline-offset-4'
@@ -32,14 +36,31 @@ export default function Header() {
 					>
 						About
 					</Link>
-					{/* <Link
-					href='#about'
-					className='text-ms font-medium hover:underline underline-offset-4'
-					style={{ textDecorationColor: '#247BA0' }}
-					prefetch={false}
-				>
-					Contact
-				</Link> */}
+					<div className='relative'>
+						<select
+							value={language}
+							onChange={e => setLanguage(e.target.value)}
+							className='appearance-none bg-transparent  text-[#247BA0] py-1 px-2 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-[#247BA0]'
+						>
+							{languages.map(lang => (
+								<option
+									key={lang}
+									value={lang}
+								>
+									{lang}
+								</option>
+							))}
+						</select>
+						<div className='pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-[#247BA0]'>
+							<svg
+								className='fill-current h-4 w-4'
+								xmlns='http://www.w3.org/2000/svg'
+								viewBox='0 0 20 20'
+							>
+								<path d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z' />
+							</svg>
+						</div>
+					</div>
 				</nav>
 			)}
 		</header>
