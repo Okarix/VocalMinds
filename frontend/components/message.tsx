@@ -78,7 +78,7 @@ export const Message = ({ content }: MessageProps) => {
 					/>
 				</div>
 			)}
-			{parsedContent.audioUrl && (
+			{/* {parsedContent.audioUrl && (
 				<div className='mt-4'>
 					<h2 className='text-xl font-semibold'>Original Audio</h2>
 					<audio
@@ -91,7 +91,7 @@ export const Message = ({ content }: MessageProps) => {
 						/>
 					</audio>
 				</div>
-			)}
+			)} */}
 			{parsedContent.tunedAudioUrl && (
 				<div className='mt-4'>
 					<h2 className='text-xl font-semibold'>Tuned Audio</h2>

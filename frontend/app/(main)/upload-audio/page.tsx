@@ -75,9 +75,9 @@ export default function UploadAudioPage() {
 				setRecordedBlob(audioBlob);
 				console.log('Recorded audio MIME type:', audioBlob.type);
 
-				const file = new File([audioBlob], 'recorded_audio.webm', { type: 'audio/webm' });
+				const file = new File([audioBlob], `recorded_audio_${Date.now()}.webm`, { type: 'audio/webm' });
 				setFile(file);
-				setFileName('recorded_audio.webm');
+				setFileName(`recorded_audio_${Date.now()}.webm`);
 
 				const audioUrl = URL.createObjectURL(audioBlob);
 				const audio = new Audio(audioUrl);
@@ -119,10 +119,12 @@ export default function UploadAudioPage() {
 				},
 			});
 			const result = response.data;
+			console.log(result);
 			addMessage({ role: 'system', content: JSON.stringify(result, null, 2), timestamp: new Date().toISOString() });
 			router.push('/chat');
 		} catch (error: any) {
 			console.error('Error uploading file:', error.response?.data || error.message);
+			console.log(error);
 			alert('There was an error uploading the file. Please try again.');
 		} finally {
 			setIsUploading(false);
