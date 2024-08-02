@@ -113,7 +113,7 @@ export default function UploadAudioPage() {
 		formData.append('audio', file);
 
 		try {
-			const response = await axios.post('vocalminds-production.up.railway.app/analyze', formData, {
+			const response = await axios.post('https://vocalminds-production.up.railway.app/analyze', formData, {
 				headers: {
 					'Content-Type': 'multipart/form-data',
 				},

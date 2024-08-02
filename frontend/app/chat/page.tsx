@@ -32,7 +32,7 @@ export default function ChatPage() {
 		setIsTyping(true);
 
 		try {
-			const response = await axios.post('vocalminds-production.up.railway.app/analyze/chat', {
+			const response = await axios.post('https://vocalminds-production.up.railway.app/analyze/chat', {
 				message,
 			});
 			const data = response.data.message;
