@@ -61,7 +61,7 @@ export default function MainPageFeatures() {
 					<img
 						src='./vocalGirl.webp'
 						alt='Features'
-						className='mx-auto aspect-video overflow-hidden rounded-xl object-fill
+						className='mx-auto aspect-video overflow-hidden rounded-xl object-cover
                  object-top sm:w-full lg:order-last w-[550px] h-[500px] rounded-[4px]'
 					/>
 				</div>

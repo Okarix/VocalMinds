@@ -49,7 +49,7 @@ const AudioCard: React.FC<AudioCardProps> = ({ title, description, isRecording, 
 						{recordedBlob && (
 							<audio
 								controls
-								className='mt-2'
+								className='mt-2 w-[100%] md:w-[60%]'
 							>
 								<source
 									src={URL.createObjectURL(recordedBlob)}
@@ -66,7 +66,7 @@ const AudioCard: React.FC<AudioCardProps> = ({ title, description, isRecording, 
 							accept='audio/*'
 							onChange={onFileChange}
 						/>
-						{fileName && <p className='mt-2 text-green-600'>File selected: {fileName}</p>}
+						{fileName && <p className='mt-2 text-[#58ad58]   '>File selected: {fileName.slice(0, 14)}</p>}
 					</>
 				)}
 			</CardContent>
